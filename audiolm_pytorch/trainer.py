@@ -347,7 +347,7 @@ class SoundStreamTrainer(nn.Module):
         # build pretty printed losses
 
         losses_str = f"{steps}: soundstream total loss: {logs['loss']:.3f}, soundstream recon loss: {logs['recon_loss']:.3f}"
-        self.accelerator.log({"total_loss": logs['loss'], "recon_loss": logs['recon_loss']}, step=steps)
+        self.accelerator.log({"total_loss": logs['loss'], "recon_loss": torch.FloatTensor(logs['recon_loss'])}, step=steps)
 
         for key, loss in logs.items():
             if not key.startswith('scale:'):
@@ -521,7 +521,7 @@ class SemanticTransformerTrainer(nn.Module):
         self.results_folder.mkdir(parents = True, exist_ok = True)
         
         hps = {"num_train_steps": num_train_steps, "data_max_length": data_max_length, "learning_rate": lr}
-        self.accelerator.init_trackers("semenatic", config=hps)
+        self.accelerator.init_trackers("semantic", config=hps)
 
     def save(self, path):
         pkg = dict(
